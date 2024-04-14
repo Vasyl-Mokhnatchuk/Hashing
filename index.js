@@ -5,11 +5,16 @@ const readline = require('readline').createInterface({
 });
 
 function checkPasswordRequirements(password) {
-  return password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password) && /[!@#$%^&*()]/.test(password);
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return passwordRegex.test(password);
 }
 
 async function hashPassword(password) {
   return await bcrypt.hash(password, 10);
+}
+
+async function checkPassword(password, hashedPassword) {
+  return await bcrypt.compare(password, hashedPassword);
 }
 
 async function compareWithHash(hash, password) {
